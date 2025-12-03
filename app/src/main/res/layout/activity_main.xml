@@ -16,4 +16,11 @@
         app:spanCount="2"
         tools:listitem="@layout/view_movie_item" />
 
+    <include
+        android:id="@+id/main_toolbar"
+        layout="@layout/custom_toolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

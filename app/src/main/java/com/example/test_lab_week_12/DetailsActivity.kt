@@ -20,6 +20,15 @@ class DetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
 
+        val back = findViewById<ImageView>(R.id.back_button)
+        val title = findViewById<TextView>(R.id.toolbar_title)
+
+        title.text = intent.getStringExtra(DetailsActivity.EXTRA_TITLE).orEmpty()
+
+        back.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
         val titleText: TextView = findViewById(R.id.title_text)
         val releaseText: TextView = findViewById(R.id.release_text)
         val overviewText: TextView = findViewById(R.id.overview_text)

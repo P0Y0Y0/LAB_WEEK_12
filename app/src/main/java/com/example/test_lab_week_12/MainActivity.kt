@@ -1,13 +1,20 @@
 package com.example.test_lab_week_12
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test_lab_week_12.model.Movie
 import com.google.android.material.snackbar.Snackbar
-import java.util.*
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), MovieAdapter.MovieClickListener {
 
@@ -17,8 +24,13 @@ class MainActivity : AppCompatActivity(), MovieAdapter.MovieClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        movieAdapter = MovieAdapter(this)
+        val back = findViewById<ImageView>(R.id.back_button)
+        val title = findViewById<TextView>(R.id.toolbar_title)
 
+        back.visibility = View.GONE
+        title.text = "Popular Movies"
+
+        movieAdapter = MovieAdapter(this)
         val recyclerView: RecyclerView = findViewById(R.id.movie_list)
         recyclerView.adapter = movieAdapter
 
@@ -26,25 +38,28 @@ class MainActivity : AppCompatActivity(), MovieAdapter.MovieClickListener {
         val movieViewModel = ViewModelProvider(
             this,
             object : ViewModelProvider.Factory {
-                override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
                     return MovieViewModel(repo) as T
                 }
             }
         )[MovieViewModel::class.java]
 
-        movieViewModel.popularMovies.observe(this) { movies ->
-            val currentYear = Calendar.getInstance().get(Calendar.YEAR).toString()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-            movieAdapter.addMovies(
-                movies
-                    .filter { it.releaseDate?.startsWith(currentYear) == true }
-                    .sortedByDescending { it.popularity }
-            )
-        }
+                launch {
+                    movieViewModel.popularMovies.collect { movies ->
+                        movieAdapter.addMovies(movies)
+                    }
+                }
 
-        movieViewModel.error.observe(this) { err ->
-            if (err.isNotEmpty()) {
-                Snackbar.make(recyclerView, err, Snackbar.LENGTH_LONG).show()
+                launch {
+                    movieViewModel.error.collect { err ->
+                        if (err.isNotEmpty()) {
+                            Snackbar.make(recyclerView, err, Snackbar.LENGTH_LONG).show()
+                        }
+                    }
+                }
             }
         }
     }

@@ -12,7 +12,9 @@
         android:layout_height="160dp"
         android:layout_margin="@dimen/layout_margin"
         android:contentDescription="@string/movie_poster"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_toolbar"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars" />
 
@@ -24,9 +26,12 @@
         android:layout_margin="@dimen/layout_margin"
         android:ellipsize="end"
         android:maxLines="4"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.218"
         app:layout_constraintStart_toEndOf="@+id/movie_poster"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.323"
         tools:text="Title" />
 
     <TextView
@@ -34,7 +39,9 @@
         style="@style/TextAppearance.AppCompat.Subhead"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="@id/title_text"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/title_text"
         app:layout_constraintTop_toBottomOf="@id/title_text"
         tools:text="Release" />
@@ -44,9 +51,18 @@
         style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/layout_margin"
+        android:layout_marginTop="44dp"
         app:layout_constraintEnd_toEndOf="@+id/release_text"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/movie_poster"
         app:layout_constraintTop_toBottomOf="@+id/movie_poster"
         tools:text="Overview" />
+
+    <include
+        android:id="@+id/details_toolbar"
+        layout="@layout/custom_toolbar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
